@@ -16,6 +16,20 @@ Build the image from the repository root:
 docker build -f docker/Dockerfile -t octobus:dev .
 ```
 
+Build environments with restricted access to the default Go or npm registries
+can override the generic dependency endpoints without maintaining a forked
+Dockerfile:
+
+```bash
+docker build -f docker/Dockerfile -t octobus:dev \
+  --build-arg GOPROXY=https://goproxy.cn,direct \
+  --build-arg NPM_CONFIG_REGISTRY=https://registry.npmmirror.com .
+```
+
+`GOPROXY` is used only by the builder. `NPM_CONFIG_REGISTRY` becomes the
+runtime default for JavaScript service package workflows and can still be
+overridden with `docker run -e npm_config_registry=...`.
+
 Run the daemon:
 
 ```bash

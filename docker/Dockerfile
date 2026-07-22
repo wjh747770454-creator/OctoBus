@@ -1,7 +1,9 @@
 FROM ubuntu:26.04 AS builder
 
+ARG GOPROXY=https://proxy.golang.org,direct
 ENV DEBIAN_FRONTEND=noninteractive \
-	GOTOOLCHAIN=auto
+	GOTOOLCHAIN=auto \
+	GOPROXY=${GOPROXY}
 WORKDIR /src
 
 RUN apt-get update \
@@ -34,9 +36,11 @@ RUN bash ./scripts/build-octobus.sh /out/octobus \
 
 FROM ubuntu:26.04
 
+ARG NPM_CONFIG_REGISTRY=https://registry.npmjs.org
 ENV DEBIAN_FRONTEND=noninteractive \
 	OCTOBUS_ADDR=0.0.0.0:9000 \
-	OCTOBUS_DATA_DIR=/var/lib/octobus
+	OCTOBUS_DATA_DIR=/var/lib/octobus \
+	npm_config_registry=${NPM_CONFIG_REGISTRY}
 
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends \
